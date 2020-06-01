@@ -1,0 +1,20 @@
+doctype html
+html(lang="ru")
+  block vars
+    - let title="HTML Academy: Девайс"
+    - let description = "HTML Academy: Девайс"
+  block head
+    head
+      meta(charset="utf-8")
+      meta(name="description", content=description)
+      title= title
+      block stylesheets
+        link(rel="stylesheet" href="css/styles.css")
+  body
+    block header
+      include ../_includes/header
+    block content
+    block footer
+      include ../_includes/footer
+    block scripts
+      script(src="js/main.js")
