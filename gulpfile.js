@@ -11,6 +11,7 @@ const formatHtml = require('gulp-format-html');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const shorthand = require('gulp-shorthand');
+const imageMin = require('gulp-imagemin');
 const browserSync = require('browser-sync').create();
 const eol = require('gulp-eol');
 const { series, parallel, dest } = require('gulp');
