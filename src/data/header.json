@@ -1,0 +1,11 @@
+{
+  "site": {
+    "title": "Our Awesome Website",
+    "meta": {
+      "charset": "utf8",
+      "description": "Lorem ipsum dolor sit amit.",
+      "keywords": "",
+      "favicon": "favicon.ico"
+    }
+  }
+}

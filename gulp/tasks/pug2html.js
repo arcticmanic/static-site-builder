@@ -1,20 +1,33 @@
-var gulp = require('gulp');
-var pug = require('gulp-pug');
+'use strict';
 
-// gulp.task('pug', () => {
-//   return gulp.src(`${pathsSRC.pug}`)
-//     .pipe(pug({
-//       pretty: true
-//     }))
-//     .on('error', notify.onError({
-//       title: "Error in Pug Partials",
-//       message: "Error: <%= error.message %>",
-//     }))
-//     .pipe(gulp.dest(`${pathsBUILD.html}`));
-// });
+const { src, dest } = require('gulp')
+const { srcPath, buildPath } = require('../config')
+const pug = require('gulp-pug')
+const fs = require('fs')
+const plumber = require('gulp-plumber')
+const pugLinter = require('gulp-pug-linter')
+const htmlValidator = require('gulp-w3c-html-validator')
+const formatHtml = require('gulp-format-html')
+const data = require('gulp-data')
 
-gulp.task('pug', function() {
-  return gulp.src('src/_pages/*.pug')
-      .pipe(pug())
-      .pipe(gulp.dest('build'));
-});
+module.exports = function pug2html() {
+  return src(srcPath + '/pages/*.pug')
+    .pipe(plumber())
+    .pipe(data(function () {
+      return JSON.parse(fs.readFileSync('temp/data.json'))
+    }))
+    .pipe(pugLinter({ reporter: 'default' }))
+    .pipe(pug())
+    .pipe(htmlValidator())
+    .pipe(formatHtml(
+      {
+        'end_with_newline': true,
+        'inline': [
+          'span'
+        ],
+        'unformatted': [],
+        'content_unformatted': []
+      }
+    ))
+    .pipe(dest(buildPath))
+}

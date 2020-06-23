@@ -1,117 +1,27 @@
 'use strict';
 
-const gulp = require('gulp');
-const plumber = require('gulp-plumber');
-const clean = require('gulp-clean');
-const pug = require('gulp-pug');
-const pugLinter = require('gulp-pug-linter');
-const styleLinter = require('gulp-stylelint');
-const htmlValidator = require('gulp-w3c-html-validator');
-const formatHtml = require('gulp-format-html');
-const sass = require('gulp-sass');
-const sourcemaps = require('gulp-sourcemaps');
-const shorthand = require('gulp-shorthand');
-const imageMin = require('gulp-imagemin');
-const browserSync = require('browser-sync').create();
-const eol = require('gulp-eol');
-const { series, parallel, dest } = require('gulp');
+const { series, parallel } = require('gulp')
+const tasks = './gulp/tasks/'
 
-function pug2html() {
-  return gulp.src('src/_pages/*.pug')
-    .pipe(plumber())
-    .pipe(pugLinter({ reporter: 'default' }))
-    .pipe(pug())
-    .pipe(htmlValidator())
-    .pipe(formatHtml(
-      {
-        "end_with_newline": true,
-        "inline": [
-          "span"
-        ],
-        "unformatted": [],
-        "content_unformatted": [],
+const serve = require(tasks + 'serve')
+const imageMinify = require(tasks + 'imageMinify')
+const clean = require(tasks + 'clean')
+const fonts = require(tasks + 'fonts')
+const pug2html = require(tasks + 'pug2html')
+const pugData = require(tasks + 'pugData')
+const others = require(tasks + 'others')
+const styles = require(tasks + 'styles')
+const scripts = require(tasks + 'scripts')
 
-      }
-    ))
-    .pipe(dest('build'))
+function setMode(isProduction = false) {
+  return cb => {
+    process.env.NODE_ENV = isProduction ? 'prod' : 'dev'
+    cb()
+  }
 }
 
-function cleanHTML() {
-  return gulp.src('build/*.html')
-    .pipe(clean());
-}
+const dev = parallel(series(pugData, pug2html), styles, scripts, others, fonts, imageMinify)
+const build = series(clean, dev)
 
-function cleanCSS() {
-  return gulp.src('build/css/*.css')
-    .pipe(clean());
-}
-
-function images() {
-  return gulp.src('src/_img/*')
-    .pipe(imageMin())
-    .pipe(gulp.dest('build/img'))
-}
-
-function styles() {
-  return gulp.src('src/_styles/*.{scss,sass}')
-    .pipe(plumber())
-    .pipe(styleLinter({
-      failAfterError: false,
-      reporters: [
-        {
-          formatter: 'string',
-          console: true
-        }
-      ]
-    }))
-    .pipe(sourcemaps.init())
-    .pipe(sass())
-    .pipe(shorthand())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('build/css'))
-}
-
-function stylesBuild() {
-  return gulp.src('src/_styles/*.{scss,sass}')
-    .pipe(plumber())
-    .pipe(styleLinter({
-      failAfterError: false,
-      reporters: [
-        {
-          formatter: 'string',
-          console: true
-        }
-      ]
-    }))
-    .pipe(sass())
-    .pipe(shorthand())
-    .pipe(eol())
-    .pipe(gulp.dest('build/css'))
-}
-
-function copy() {
-  return gulp.src('src/_static/*')
-    .pipe(dest('build'))
-}
-
-function serve(cb) {
-  browserSync.init({
-    server: 'build',
-    notify: false,
-    open: true,
-    cors: true
-  });
-
-
-  gulp.watch('src/_pages/**/*.pug', gulp.series(pug2html));
-  gulp.watch('build/*.html').on('change', browserSync.reload);
-  gulp.watch('src/_styles/**/*.{scss,sass}', gulp.series(styles, cb => gulp.src('build/css').pipe(browserSync.stream()).on('end', cb)))
-
-  return cb();
-}
-
-exports.serve = series(
-  serve
-);
-exports.build = series(cleanHTML, cleanCSS, images, pug2html, stylesBuild, copy);
-exports.styles = styles;
+module.exports.start = series(setMode(), build, serve)
+module.exports.build = series(setMode(true), build)
