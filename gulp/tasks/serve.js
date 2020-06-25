@@ -27,7 +27,7 @@ module.exports = function serve(cb) {
   watch('src/pages/**/*.pug', series(pug2html, readyReload))
   watch('src/scripts/*.js', series(scripts, readyReload))
   watch('src/styles/**/*.{scss,sass}', series(styles, cb => src(buildPath).pipe(server.stream()).on('end', cb)))
-  watch('src/data/*.json', series(pugData, readyReload))
+  watch('src/data/*.json', series(pugData, pug2html, readyReload))
 
   return cb()
 }

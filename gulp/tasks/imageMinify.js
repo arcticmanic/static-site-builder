@@ -15,5 +15,5 @@ module.exports = function imageMinify() {
         optimizationLevel: 5
       })
     ]))
-    .pipe(dest(buildPath))
+    .pipe(dest(buildPath + '/img'))
 }

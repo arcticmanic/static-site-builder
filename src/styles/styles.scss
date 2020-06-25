@@ -1,6 +1,10 @@
+@import "mixins/media";
 @import "utils/variables";
+@import "helpers/helpers";
 @import "common/global";
 
 body {
-  background: purple;
+  @include media-breakpoint-up(md) {
+    background: purple;
+  }
 }

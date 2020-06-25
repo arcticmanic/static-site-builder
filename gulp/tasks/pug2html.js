@@ -18,7 +18,6 @@ module.exports = function pug2html() {
     }))
     .pipe(pugLinter({ reporter: 'default' }))
     .pipe(pug())
-    .pipe(htmlValidator())
     .pipe(formatHtml(
       {
         'end_with_newline': true,
@@ -29,5 +28,6 @@ module.exports = function pug2html() {
         'content_unformatted': []
       }
     ))
+    .pipe(htmlValidator())
     .pipe(dest(buildPath))
 }
