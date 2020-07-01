@@ -5,7 +5,7 @@ const imageMin = require('gulp-imagemin')
 const { srcPath, buildPath } = require('../config')
 
 module.exports = function imageMinify() {
-  return src(srcPath + '/img')
+  return src(srcPath + '/img/*')
     .pipe(imageMin([
       imageMin.mozjpeg({
         quality: 70,
