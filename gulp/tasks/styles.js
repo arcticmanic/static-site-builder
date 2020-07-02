@@ -9,8 +9,8 @@ const plumber = require('gulp-plumber')
 const autoprefixer = require('gulp-autoprefixer')
 const eol = require('gulp-eol')
 
-if (process.env.NODE_ENV == "prod") {
-  module.exports = function styles() {
+module.exports = function styles() {
+  if (process.env.NODE_ENV === 'prod') {
     return src(srcPath + '/styles/*.{scss,sass}')
       .pipe(plumber())
       .pipe(sass())
@@ -26,9 +26,7 @@ if (process.env.NODE_ENV == "prod") {
         ]
       }))
       .pipe(dest(buildPath + '/css'))
-  }
-} else {
-  module.exports = function styles() {
+  } else {
     return src(srcPath + '/styles/*.{scss,sass}')
       .pipe(plumber())
       .pipe(styleLinter({
@@ -46,6 +44,3 @@ if (process.env.NODE_ENV == "prod") {
       .pipe(dest(buildPath + '/css'))
   }
 }
-
-
-
