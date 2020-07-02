@@ -13,7 +13,9 @@ module.exports = function styles() {
   if (process.env.NODE_ENV === 'prod') {
     return src(srcPath + '/styles/*.{scss,sass}')
       .pipe(plumber())
-      .pipe(sass())
+      .pipe(sass({
+        outputStyle: 'expanded'
+      }))
       .pipe(autoprefixer(['last 4 versions'], { cascade: true }))
       .pipe(eol())
       .pipe(styleLinter({
@@ -23,7 +25,8 @@ module.exports = function styles() {
             formatter: 'string',
             console: true
           }
-        ]
+        ],
+        fix: true
       }))
       .pipe(dest(buildPath + '/css'))
   } else {
