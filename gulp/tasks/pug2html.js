@@ -13,8 +13,8 @@ const data = require('gulp-data')
 module.exports = function pug2html() {
   return src(srcPath + '/pages/*.pug')
     .pipe(plumber())
-    .pipe(data(function () {
-      return JSON.parse(fs.readFileSync('temp/data.json'))
+    .pipe(data(function() {
+      return JSON.parse(fs.readFileSync(srcPath + '/data/data.json'))
     }))
     .pipe(pugLinter({ reporter: 'default' }))
     .pipe(pug())

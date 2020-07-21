@@ -1,13 +1,13 @@
 'use strict';
 
 const { src, dest } = require('gulp')
-const { srcPath, tempPath } = require('../config')
+const { srcPath } = require('../config')
 const mergeJson = require('gulp-merge-json');
 const path = require('path');
 const eol = require('gulp-eol')
 
 module.exports = function pugData() {
-  return src(srcPath + '/data/**/*.json')
+  return src(srcPath + '/data/modules/*.json')
     .pipe(mergeJson({
       jsonSpace: '  ',
       fileName: 'data.json',
@@ -21,5 +21,5 @@ module.exports = function pugData() {
       }
     }))
     .pipe(eol())
-    .pipe(dest(tempPath));
+    .pipe(dest(srcPath + '/data/'));
 }
