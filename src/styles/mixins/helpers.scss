@@ -8,8 +8,8 @@
   margin-right: auto;
 }
 
-.list-unstyled {
-  list-style: none;
-  padding: 0;
+@mixin reset-list {
   margin: 0;
+  padding: 0;
+  list-style: none;
 }

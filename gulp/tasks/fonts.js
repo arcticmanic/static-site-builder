@@ -5,5 +5,5 @@ const { srcPath, buildPath } = require('../config')
 
 module.exports = function fonts() {
   return src(srcPath + '/fonts/*')
-    .pipe(dest(buildPath))
+    .pipe(dest(buildPath + '/fonts'))
 }
